@@ -2,9 +2,8 @@
 google-adk            # Google Agent Development Kit (agents, MCP toolset, adk web/eval CLI)
 litellm               # lets ADK route to OpenAI models via LiteLlm(model="openai/...")
 
-# --- WhatsApp MCP server ---
-mcp                   # Model Context Protocol server SDK (exposes WhatsApp tools)
-requests              # calls the WhatsApp Cloud API (Graph API) from the MCP server
+# --- WhatsApp Cloud API ---
+requests              # calls the WhatsApp Cloud API (Graph API) to send/receive messages
 
 # --- Live webhook (real WhatsApp product) ---
 fastapi               # GET/POST /webhook endpoints (Meta verification + inbound messages)

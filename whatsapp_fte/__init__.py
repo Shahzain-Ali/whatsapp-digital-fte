@@ -1,3 +1,3 @@
-# Makes `whatsapp_fte` a discoverable ADK agent package.
-# `adk web` / `adk run` import this package and read `agent.root_agent`.
-from . import agent
+# The `whatsapp_fte` package: the live customer agent + booking backend used by
+# the WhatsApp webhook (see whatsapp_webhook/). The real product runs via FastAPI,
+# not `adk web`, so there is no adk-web root agent imported here.
