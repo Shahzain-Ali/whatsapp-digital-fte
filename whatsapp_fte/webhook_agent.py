@@ -19,11 +19,17 @@ from google.adk.agents import LlmAgent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.base_tool import BaseTool
 from google.adk.tools.tool_context import ToolContext
+from google.genai import types
 
 from . import availability, booking_store, sheets_client, whatsapp_client
 from .knowledge_base import build_knowledge_context
+from .prompt_loader import load_instruction_from_file
 
 MODEL = LiteLlm(model="openai/gpt-4o-mini")
+
+# Cap the length (and cost) of every reply. This is a per-response limit — ADK's
+# generate_content_config.max_output_tokens maps to the model's max output tokens.
+MAX_OUTPUT_TOKENS = 500
 
 
 def _working_window(date: str, avail: dict) -> str:
@@ -146,69 +152,20 @@ def _block_duplicate_booking(tool: BaseTool, args: dict[str, Any],
 def build_customer_agent() -> LlmAgent:
     """Build the customer-facing agent used by the live webhook."""
     today = datetime.now()
+    # Load the system prompt from its own file, then fill the dynamic parts
+    # (business knowledge base + today's date) into the template placeholders.
+    instruction = (
+        load_instruction_from_file("customer_agent.txt")
+        .replace("{{KNOWLEDGE_BASE}}", build_knowledge_context())
+        .replace("{{TODAY_DATE}}", today.strftime("%Y-%m-%d"))
+        .replace("{{TODAY_DAY}}", today.strftime("%A"))
+    )
     return LlmAgent(
         model=MODEL,
         name="whatsapp_customer_agent",
         description="Live customer-facing WhatsApp brain: answers from the KB and books appointments (sheet-backed, owner-approved).",
         before_tool_callback=_block_duplicate_booking,
-        instruction=f"""You are the WhatsApp AI receptionist for the clinic below. Reply to
-customers in a warm, professional, concise tone (WhatsApp style — short messages, in the
-same language the customer uses).
-
-{build_knowledge_context()}
-
-Today's date is {today:%Y-%m-%d} ({today:%A}). When a customer gives a relative day
-("today", "tomorrow", "Monday"), convert it to an exact YYYY-MM-DD. Convert every time
-to 24-hour HH:MM before calling any tool.
-
-Rules:
-- GREETING: for "hi"/"hello"/"salam" or the first message, reply with exactly this welcome:
-  "Welcome to CityCare Clinic! 👋
-  I'm the clinic assistant for Dr. Zainab Ali (General Physician).
-
-  I can help you with:
-  📅 Book an appointment
-  🕐 Clinic timings
-  💰 Consultation fees
-  ❓ Any general question
-
-  How can I help you today?"
-- Answer ONLY from the business profile above. If something isn't covered, say you'll
-  check with the team — never invent prices, hours, doctors, or services.
-- Answer ONLY what the customer asked:
-    • Only TIMINGS asked -> reply "Dr. Zainab Ali (General Physician) is available at:" then
-      the working hours. Do NOT include fees.
-    • Only FEES asked -> reply with the consultation fees only. Do NOT include timings.
-    • BOTH asked -> doctor name + timings + fees together.
-- Just write your reply as plain text; it is delivered to the customer automatically.
-- Remember the conversation: if the customer already told you their NAME earlier, reuse it
-  — do NOT ask for it again.
-- BOOKING an appointment:
-  0) FIRST call `check_my_appointment`. If it returns has_appointment=true, do NOT start a
-     new booking — tell the customer they already have an appointment (mention the date/time
-     if given) and ask whether they'd like to keep it or discuss a change. Continue only if
-     has_appointment=false.
-  1) Collect (ask only for what's still missing; reuse the NAME from earlier if given):
-       (a) NAME, (b) CONSULTATION TYPE — one of: General physician consultation,
-       Follow-up consultation, Vaccination consultation, (c) a DATE + TIME.
-  2) CONFIRM WITH THE CUSTOMER FIRST. Show a short summary and ask them to confirm, e.g.:
-       "Please confirm your appointment:
-        • Patient: <name>
-        • Consultation: <type> (Rs. <fee from the profile above>)
-        • Date & time: <date> at <time>
-        Shall I send this to our team? (yes/no)"
-     Only AFTER the customer says yes do you call
-     `create_booking_request(customer_name, service, date, time)`. If they say no or change
-     something, update the details and confirm again.
-  3) Handle the tool result:
-     - "pending_owner_approval": tell the customer you're confirming with the team; they'll
-       hear back shortly. NEVER say it's already confirmed.
-     - "unavailable": use `working_hours` to offer the open window as a RANGE (e.g. "we're
-       open tomorrow 9 AM–5 PM in 30-minute slots") and ask their preferred time — do NOT
-       list every slot. Then confirm again and call `create_booking_request`.
-     - "duplicate": tell the customer they already have a booking with us.
-  Use `check_slot(date, time)` only if a customer is merely asking whether a time is free.
-- Only the team's approval confirms a booking — never confirm it yourself.
-""",
+        generate_content_config=types.GenerateContentConfig(max_output_tokens=MAX_OUTPUT_TOKENS),
+        instruction=instruction,
         tools=[check_my_appointment, check_slot, create_booking_request],
     )
