@@ -1,0 +1,18 @@
+# --- Core agent framework ---
+google-adk            # Google Agent Development Kit (agents, MCP toolset, adk web/eval CLI)
+litellm               # lets ADK route to OpenAI models via LiteLlm(model="openai/...")
+
+# --- WhatsApp MCP server ---
+mcp                   # Model Context Protocol server SDK (exposes WhatsApp tools)
+requests              # calls the WhatsApp Cloud API (Graph API) from the MCP server
+
+# --- Live webhook (real WhatsApp product) ---
+fastapi               # GET/POST /webhook endpoints (Meta verification + inbound messages)
+uvicorn               # ASGI server that runs the webhook app
+
+# --- Booking backend (Google Sheets) ---
+gspread               # read/write the Availability + Bookings tabs
+google-auth           # service-account auth for Google Sheets
+
+# --- Config ---
+python-dotenv         # loads API keys / IDs from .env (local); Cloud Run injects env vars

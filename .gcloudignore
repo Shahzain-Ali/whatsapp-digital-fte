@@ -1,0 +1,14 @@
+# Files NOT uploaded to Cloud Run (keep secrets out of the image; env vars come from Cloud Run).
+.venv/
+__pycache__/
+*.pyc
+.env
+*.env
+whatsapp_fte/.env
+.secrets/
+.adk/
+whatsapp_fte/.adk/
+*.session.json
+env.yaml
+.git/
+docs/

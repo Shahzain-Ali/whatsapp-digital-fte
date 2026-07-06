@@ -1,0 +1,18 @@
+{
+  "business_name": "CityCare Clinic",
+  "about": "A family doctor's clinic for general checkups and consultations with Dr. Ayesha Khan. Friendly staff, short waiting times, affordable rates. Appointments can be booked on WhatsApp.",
+  "services": [
+    "General physician consultation - Rs. 1500",
+    "Follow-up consultation - Rs. 800",
+    "Vaccination consultation - Rs. 1000"
+  ],
+  "hours": "Monday to Thursday 9:00 AM to 5:00 PM, Friday 9:00 AM to 1:00 PM, Saturday 10:00 AM to 2:00 PM. Closed on Sundays.",
+  "location": "Block 5, Gulshan-e-Iqbal, Karachi",
+  "contact": "Phone: 021-1234567",
+  "faqs": [
+    { "q": "Do I need an appointment?", "a": "Walk-ins are welcome, but appointments are given priority. You can book one right here on WhatsApp." },
+    { "q": "Which doctor will I see?", "a": "Dr. Ayesha Khan, our general physician, handles all consultations." },
+    { "q": "How long is a consultation?", "a": "About 30 minutes per appointment slot." },
+    { "q": "What payment methods do you accept?", "a": "Cash, credit/debit cards, and JazzCash." }
+  ]
+}

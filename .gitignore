@@ -1,0 +1,20 @@
+# --- Secrets: NEVER commit real keys ---
+.env
+*.env
+!.env.example
+whatsapp_fte/.env
+.secrets/
+env.yaml
+*.json.key
+gsa-key.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# --- ADK / local runtime ---
+*.session.json
+.adk/
