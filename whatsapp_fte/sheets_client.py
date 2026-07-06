@@ -92,6 +92,25 @@ def _parse_date(s: str):
     return None
 
 
+def get_upcoming_booking(phone: str) -> dict | None:
+    """Return this phone's confirmed booking dated today-or-later (for telling the
+    customer their existing appointment), or None."""
+    today = date.today()
+    try:
+        for b in get_bookings():
+            if str(b.get("Phone")) != str(phone):
+                continue
+            if str(b.get("Status", "")).lower() not in _ACTIVE:
+                continue
+            d = _parse_date(b.get("Date", ""))
+            if d and d >= today:
+                return b
+        return None
+    except Exception as e:
+        print(f"[booking] sheet read failed: {e}", flush=True)
+        return None
+
+
 def has_upcoming_booking(phone: str) -> bool:
     """Guardrail: does this phone have a confirmed booking that is TODAY or later?
 

@@ -38,6 +38,7 @@ def build_knowledge_context() -> str:
 
     return f"""BUSINESS PROFILE (your single source of truth — never invent facts beyond this):
 Name: {p.get('business_name', 'N/A')}
+Doctor: {p.get('doctor', 'N/A')}
 About: {p.get('about', 'N/A')}
 Location: {p.get('location', 'N/A')}
 Contact: {p.get('contact', 'N/A')}

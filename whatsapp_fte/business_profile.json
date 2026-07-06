@@ -1,6 +1,7 @@
 {
   "business_name": "CityCare Clinic",
-  "about": "A family doctor's clinic for general checkups and consultations with Dr. Ayesha Khan. Friendly staff, short waiting times, affordable rates. Appointments can be booked on WhatsApp.",
+  "about": "CityCare Clinic is the private practice of Dr. Zainab Ali, a general physician, for checkups and consultations. Warm, friendly service, short waiting times, and affordable rates. Appointments can be booked right here on WhatsApp.",
+  "doctor": "Dr. Zainab Ali (General Physician)",
   "services": [
     "General physician consultation - Rs. 1500",
     "Follow-up consultation - Rs. 800",
@@ -11,7 +12,7 @@
   "contact": "Phone: 021-1234567",
   "faqs": [
     { "q": "Do I need an appointment?", "a": "Walk-ins are welcome, but appointments are given priority. You can book one right here on WhatsApp." },
-    { "q": "Which doctor will I see?", "a": "Dr. Ayesha Khan, our general physician, handles all consultations." },
+    { "q": "Which doctor will I see?", "a": "You'll see Dr. Zainab Ali, our general physician. She is available during the clinic's working hours." },
     { "q": "How long is a consultation?", "a": "About 30 minutes per appointment slot." },
     { "q": "What payment methods do you accept?", "a": "Cash, credit/debit cards, and JazzCash." }
   ]

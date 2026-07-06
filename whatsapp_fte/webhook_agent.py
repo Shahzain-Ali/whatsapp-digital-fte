@@ -106,6 +106,27 @@ def create_booking_request(customer_name: str, service: str, date: str, time: st
     }
 
 
+def check_my_appointment(tool_context: ToolContext) -> dict:
+    """Check whether THIS customer already has an upcoming or pending appointment.
+
+    Call this FIRST when a customer wants to book, before collecting any details.
+    """
+    phone = tool_context.state.get("customer_phone", "")
+    if booking_store.has_pending_for_phone(phone):
+        return {"has_appointment": True,
+                "message": "Customer already has a booking request awaiting the team's approval."}
+    b = sheets_client.get_upcoming_booking(phone)
+    if b:
+        return {
+            "has_appointment": True,
+            "date": str(b.get("Date", "")),
+            "time": str(b.get("Time", "")),
+            "service": str(b.get("Service", "")),
+            "message": "Customer already has a confirmed upcoming appointment.",
+        }
+    return {"has_appointment": False}
+
+
 def _block_duplicate_booking(tool: BaseTool, args: dict[str, Any],
                              tool_context: ToolContext) -> Optional[dict]:
     """Guardrail (before_tool_callback): block a booking if this phone already has one."""
@@ -141,12 +162,32 @@ Today's date is {today:%Y-%m-%d} ({today:%A}). When a customer gives a relative 
 to 24-hour HH:MM before calling any tool.
 
 Rules:
+- GREETING: for "hi"/"hello"/"salam" or the first message, reply with exactly this welcome:
+  "Welcome to CityCare Clinic! 👋
+  I'm the clinic assistant for Dr. Zainab Ali (General Physician).
+
+  I can help you with:
+  📅 Book an appointment
+  🕐 Clinic timings
+  💰 Consultation fees
+  ❓ Any general question
+
+  How can I help you today?"
 - Answer ONLY from the business profile above. If something isn't covered, say you'll
   check with the team — never invent prices, hours, doctors, or services.
+- Answer ONLY what the customer asked:
+    • Only TIMINGS asked -> reply "Dr. Zainab Ali (General Physician) is available at:" then
+      the working hours. Do NOT include fees.
+    • Only FEES asked -> reply with the consultation fees only. Do NOT include timings.
+    • BOTH asked -> doctor name + timings + fees together.
 - Just write your reply as plain text; it is delivered to the customer automatically.
 - Remember the conversation: if the customer already told you their NAME earlier, reuse it
   — do NOT ask for it again.
 - BOOKING an appointment:
+  0) FIRST call `check_my_appointment`. If it returns has_appointment=true, do NOT start a
+     new booking — tell the customer they already have an appointment (mention the date/time
+     if given) and ask whether they'd like to keep it or discuss a change. Continue only if
+     has_appointment=false.
   1) Collect (ask only for what's still missing; reuse the NAME from earlier if given):
        (a) NAME, (b) CONSULTATION TYPE — one of: General physician consultation,
        Follow-up consultation, Vaccination consultation, (c) a DATE + TIME.
@@ -169,5 +210,5 @@ Rules:
   Use `check_slot(date, time)` only if a customer is merely asking whether a time is free.
 - Only the team's approval confirms a booking — never confirm it yourself.
 """,
-        tools=[check_slot, create_booking_request],
+        tools=[check_my_appointment, check_slot, create_booking_request],
     )
