@@ -30,6 +30,34 @@ through a **FastAPI webhook** on the **WhatsApp Cloud API**, and deployed live o
 
 ---
 
+## 📸 Demo
+
+### 1. Answering patient questions — grounded & selective
+![Greeting and Q&A on WhatsApp](docs/screenshots/whatsapp-booking-1.png)
+
+> Greets the patient and answers **only from the clinic's knowledge base** — ask for hours,
+> get just the hours; ask for fees, get just the fees. It never invents information.
+
+### 2. Booking an appointment — end-to-end (default: auto-confirm)
+![Appointment booked and confirmed on WhatsApp](docs/screenshots/whatsapp-booking-2.png)
+
+> *"book me an appointment tomorrow at 11 AM"* → collects the details → shows a summary to
+> confirm → **books it and confirms instantly.** Zero human touch, 24/7.
+
+### 3. Under the hood — Google ADK trace (`adk web`)
+![ADK web trace and span view of one turn](docs/screenshots/adk-web-trace.png)
+
+> One turn's **trace / span** view: the LLM calls (`generate_content`) and the
+> `create_booking_request` tool execution, each with its own latency — full observability.
+
+### 4. Optional human-in-the-loop (`REQUIRE_APPROVAL=true`)
+![Owner approves a booking request over WhatsApp](docs/screenshots/hitl-approval.png)
+
+> Flip the flag and every booking is routed to the clinic first — the owner replies
+> **YES / NO** on WhatsApp before the appointment is confirmed.
+
+---
+
 ## ✨ Key Features
 
 | Feature | What it does |
