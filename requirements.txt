@@ -1,6 +1,7 @@
 # --- Core agent framework ---
 google-adk            # Google Agent Development Kit (agents, MCP toolset, adk web/eval CLI)
 litellm               # lets ADK route to OpenAI models via LiteLlm(model="openai/...")
+orjson                # required by recent litellm builds (fast JSON); missing it breaks every LLM call
 
 # --- WhatsApp Cloud API ---
 requests              # calls the WhatsApp Cloud API (Graph API) to send/receive messages
