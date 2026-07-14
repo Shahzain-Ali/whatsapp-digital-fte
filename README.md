@@ -150,7 +150,7 @@ slot start — so overlaps are impossible by construction.
 ## 📂 Project Structure
 
 ```
-whatsapp-digital-fte/
+whatsapp-ai-receptionist/
 ├── whatsapp_fte/                 # The agent + its business logic (the "brain")
 │   ├── webhook_agent.py          # Builds the LlmAgent: model, prompt, tools, guardrail
 │   ├── prompt_loader.py          # Generic loader: load_instruction_from_file(...)
@@ -184,8 +184,8 @@ whatsapp-digital-fte/
 
 ### 1. Clone & install
 ```bash
-git clone https://github.com/Shahzain-Ali/whatsapp-digital-fte.git
-cd whatsapp-digital-fte
+git clone https://github.com/Shahzain-Ali/whatsapp-ai-receptionist.git
+cd whatsapp-ai-receptionist
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
