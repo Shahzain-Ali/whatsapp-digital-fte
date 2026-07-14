@@ -1,7 +1,8 @@
 # 🩺 WhatsApp Digital FTE — AI Receptionist for Clinics
 
-> An AI employee that runs a clinic's WhatsApp front desk **24/7** — answers patient
-> questions and books appointments **end-to-end**, backed by a live Google Sheet.
+> An AI employee that runs a clinic's WhatsApp front desk **24/7** — it answers patient
+> questions and books appointments **end-to-end** (a booking completes in about **4 messages,
+> with zero staff involved**), backed by a live Google Sheet.
 
 <p align="left">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white">
@@ -267,6 +268,12 @@ safety is identical either way.
 - 🗄️ **Persistent sessions** (`DatabaseSessionService`) to survive restarts
 - 🏥 **Multi-doctor / multi-tenant** scheduling
 - 📊 An **owner dashboard** beyond the raw sheet
+
+---
+
+## 📄 License
+
+Released under the [MIT License](LICENSE) — free to use, modify, and build on.
 
 ---
 
