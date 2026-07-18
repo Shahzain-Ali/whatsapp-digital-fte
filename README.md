@@ -13,6 +13,8 @@
   <img alt="Status" src="https://img.shields.io/badge/status-live-brightgreen">
 </p>
 
+🎥 **[▶ Watch the demo](#demo)** — an appointment booked live on WhatsApp, end-to-end.
+
 ---
 
 ## 📖 Overview
@@ -30,6 +32,8 @@ through a **FastAPI webhook** on the **WhatsApp Cloud API**, and deployed live o
 > Swap `whatsapp_fte/business_profile.json` to run it for any business.
 
 ---
+
+<a id="demo"></a>
 
 ## 📸 Demo
 
